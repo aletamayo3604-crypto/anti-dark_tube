@@ -1,6 +1,6 @@
 FROM debian:bookworm
 
-# Instalar python, pip, ffmpeg y yt-dlp
+# Instalar python, pip, ffmpeg y yt-dlp real
 RUN apt-get update && apt-get install -y \
     python3 \
     python3-pip \
@@ -9,7 +9,7 @@ RUN apt-get update && apt-get install -y \
     && pip3 install yt-dlp \
     && apt-get clean
 
-# NodeJS
+# Instalar Node 18
 RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
     && apt-get install -y nodejs
 
