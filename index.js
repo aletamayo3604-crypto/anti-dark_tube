@@ -44,9 +44,9 @@ app.get("/stream", (req, res) => {
   });
 });
 
-// Puerto Fly.io
+// Puerto Fly.io (IMPORTANTE)
 const PORT = process.env.PORT || 8080;
 
-app.listen(PORT, () => {
+app.listen(PORT, "0.0.0.0", () => {
   console.log(`ANTI DARKTUBE server running on port ${PORT}`);
 });
