@@ -1,5 +1,6 @@
-const express = require("express");
+ const express = require("express");
 const { exec } = require("child_process");
+const fs = require("fs");
 
 const app = express();
 
@@ -8,45 +9,45 @@ app.get("/", (req, res) => {
   res.send("ANTI DARKTUBE — ONLINE");
 });
 
-// STREAM UNIVERSAL
+// DESCARGA PARA ATAJOS
+app.get("/download", (req, res) => {
+  const videoURL = req.query.url;
+  if (!videoURL) return res.status(400).send("Missing ?url=");
+
+  console.log("Downloading for Shortcuts:", videoURL);
+
+  const file = "/tmp/video.mp4";
+  const command = `yt-dlp -f mp4 -o ${file} "${videoURL}"`;
+
+  exec(command, (err) => {
+    if (err) return res.status(500).send("Download failed");
+
+    res.download(file, "anti_darktube.mp4", (err) => {
+      fs.unlink(file, () => {}); // cleanup
+    });
+  });
+});
+
+// STREAM UNIVERSAL (NAVEGADOR)
 app.get("/stream", (req, res) => {
   const videoURL = req.query.url;
+  if (!videoURL) return res.status(400).send("Missing ?url=");
 
-  if (!videoURL) {
-    return res.status(400).send("Missing ?url=");
-  }
-
-  console.log("Downloading:", videoURL);
+  console.log("Streaming:", videoURL);
 
   const command = `yt-dlp -f mp4 -o - "${videoURL}"`;
 
-  const process = exec(command, {
-    maxBuffer: 1024 * 1024 * 50, // 50 MB
-  });
+  const process = exec(command, { maxBuffer: 1024 * 1024 * 50 });
 
-  // Headers correctos
   res.setHeader("Content-Type", "video/mp4");
-  res.setHeader(
-    "Content-Disposition",
-    'attachment; filename="anti_darktube.mp4"'
-  );
+  res.setHeader("Content-Disposition", 'attachment; filename="anti_darktube.mp4"');
   res.setHeader("Transfer-Encoding", "chunked");
 
-  // Stream directo
   process.stdout.pipe(res);
-
-  process.stderr.on("data", (err) => {
-    console.log("yt-dlp error:", err.toString());
-  });
-
-  process.on("close", () => {
-    console.log("Stream finished");
-  });
 });
 
-// Puerto Fly.io (IMPORTANTE)
+// Fly.io port
 const PORT = process.env.PORT || 8080;
-
-app.listen(PORT, "0.0.0.0", () => {
-  console.log(`ANTI DARKTUBE server running on port ${PORT}`);
-});
+app.listen(PORT, () => {
+  console.log(`ANTI DARKTUBE running on port ${PORT}`);
+});                 
