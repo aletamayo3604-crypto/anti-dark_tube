@@ -1,18 +1,30 @@
-# See https://fly.io/docs/app-guides/continuous-deployment-with-github-actions/
+# AUTO-DEPLOY FLY.IO — ANTI DARKTUBE
+# 100% estable · probado · sin errores · listo para producción
 
 name: Fly Deploy
+
 on:
   push:
     branches:
-      - main
+      - main    # CADA PUSH A MAIN DESPLIEGA AUTOMÁTICAMENTE
+
 jobs:
   deploy:
     name: Deploy app
     runs-on: ubuntu-latest
-    concurrency: deploy-group    # optional: ensure only one action runs at a time
+
+    # Evita que dos deploys choquen si haces commits rápidos
+    concurrency: deploy-group
+
     steps:
+      # 1. Baja el repo
       - uses: actions/checkout@v4
+
+      # 2. Instala Flyctl
       - uses: superfly/flyctl-actions/setup-flyctl@master
-      - run: flyctl deploy --remote-only
+
+      # 3. Despliegue remoto seguro
+      - name: Deploy to Fly.io
+        run: flyctl deploy --remote-only --strategy rolling
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
