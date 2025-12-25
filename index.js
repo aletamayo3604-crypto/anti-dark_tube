@@ -1,9 +1,9 @@
-import express from "express";
-import { exec } from "child_process";
+const express = require("express");
+const { exec } = require("child_process");
 
 const app = express();
 
-// Home básico
+// Home
 app.get("/", (req, res) => {
   res.send("ANTI DARKTUBE — ONLINE");
 });
@@ -18,28 +18,35 @@ app.get("/stream", (req, res) => {
 
   console.log("Downloading:", videoURL);
 
-  // Ejecutar yt-dlp directamente
   const command = `yt-dlp -f mp4 -o - "${videoURL}"`;
 
-  const process = exec(command, { maxBuffer: 1024 * 1024 * 50 }); // 50MB buffer
+  const process = exec(command, {
+    maxBuffer: 1024 * 1024 * 50, // 50 MB
+  });
 
-  // Set headers de descarga
+  // Headers correctos
   res.setHeader("Content-Type", "video/mp4");
-  res.setHeader("Content-Disposition", "attachment; filename=anti.mp4");
+  res.setHeader(
+    "Content-Disposition",
+    'attachment; filename="anti_darktube.mp4"'
+  );
+  res.setHeader("Transfer-Encoding", "chunked");
 
-  // Piping directo hacia el usuario
+  // Stream directo
   process.stdout.pipe(res);
 
   process.stderr.on("data", (err) => {
-    console.log("yt-dlp:", err.toString());
+    console.log("yt-dlp error:", err.toString());
   });
 
   process.on("close", () => {
-    console.log("DONE");
+    console.log("Stream finished");
   });
 });
 
-// Puerto donde corre
-app.listen(8080, () => {
-  console.log("ANTI DARKTUBE server running on port 8080");
+// Puerto Fly.io
+const PORT = process.env.PORT || 8080;
+
+app.listen(PORT, () => {
+  console.log(`ANTI DARKTUBE server running on port ${PORT}`);
 });
