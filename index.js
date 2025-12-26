@@ -6,7 +6,7 @@ const app = express();
 //  HOME
 // ================================
 app.get("/", (req, res) => {
-  res.send("🔥 ANTI DARKTUBE — ONLINE 🔥");
+  res.send("🔥 ANTI-DARK_TUBE — ONLINE 🔥");
 });
 
 // ================================
@@ -33,7 +33,7 @@ app.get("/stream", (req, res) => {
   res.setHeader("Content-Type", "video/mp4");
   res.setHeader(
     "Content-Disposition",
-    'attachment; filename="anti_darktube_video.mp4"'
+    'attachment; filename="anti-dark_tube_video.mp4"'
   );
 
   ytdlp.stdout.pipe(res);
@@ -65,7 +65,7 @@ app.get("/download", (req, res) => {
   res.setHeader("Content-Type", "video/mp4");
   res.setHeader(
     "Content-Disposition",
-    'attachment; filename="anti_darktube_full.mp4"'
+    'attachment; filename="anti-dark_tube_full.mp4"'
   );
 
   ytdlp.stdout.pipe(res);
@@ -97,7 +97,7 @@ app.get("/audio", (req, res) => {
   res.setHeader("Content-Type", "audio/mpeg");
   res.setHeader(
     "Content-Disposition",
-    'attachment; filename="anti_darktube_audio.mp3"'
+    'attachment; filename="anti-dark_tube_audio.mp3"'
   );
 
   ytdlp.stdout.pipe(res);
@@ -152,5 +152,5 @@ app.get("/info", (req, res) => {
 const PORT = process.env.PORT || 8080;
 
 app.listen(PORT, "0.0.0.0", () => {
-  console.log(`🔥 ANTI DARKTUBE running on port ${PORT}`);
+  console.log(`🔥 ANTI-DARK_TUBE running on port ${PORT}`);
 });
