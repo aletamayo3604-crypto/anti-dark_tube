@@ -1,4 +1,4 @@
-app = "anti-darktube"
+app = "anti-dark_tube"
 
 [build]
   dockerfile = "./Dockerfile"
