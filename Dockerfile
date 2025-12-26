@@ -1,25 +1,16 @@
-FROM debian:bookworm
+FROM node:18
 
-# Instalar dependencias del sistema + yt-dlp oficial
-RUN apt-get update && apt-get install -y \
-    python3 \
-    python3-pip \
-    ffmpeg \
-    curl \
-    yt-dlp \
-    && apt-get clean
+# Librerías necesarias para yt-dlp
+RUN apt-get update && apt-get install -y python3 ffmpeg curl
 
-# Instalar Node.js 18
-RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
-    && apt-get install -y nodejs
+# Instalar yt-dlp
+RUN curl -L https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp \
+     -o /usr/local/bin/yt-dlp && chmod +x /usr/local/bin/yt-dlp
 
 WORKDIR /app
-
-COPY package*.json ./
-RUN npm install --omit=dev
+COPY package.json .
+RUN npm install
 
 COPY . .
 
-EXPOSE 8080
-
-CMD ["npm", "start"]
+CMD ["node", "index.js"]
