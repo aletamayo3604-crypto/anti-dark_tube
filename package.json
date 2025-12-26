@@ -1,7 +1,7 @@
 {
-  "name": "anti-darktube",
+  "name": "anti-dark_tube",
   "version": "1.0.0",
-  "description": "ANTI DARKTUBE streaming server",
+  "description": "ANTI DARK_TUBE streaming server",
   "main": "index.js",
   "scripts": {
     "start": "node index.js"
